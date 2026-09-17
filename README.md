@@ -768,8 +768,8 @@ const chapters = [
   id:"valoracion", kicker:"Paso 2 · Valoración inicial", title:"Lo que empieza a salir a flote",
   eyebrow:"Espacio Violeta — sala privada", art:scenePrivateRoom("var(--rose)"), accent:"var(--rose)",
   lines:[
-    {who:"maria", text:"Necesito que le fijen una cuota de alimentos a mi hija Juliana, de doce años. Nos separamos hace poco y él no nos ha dado nada."},
-    {who:"vivian", text:"Claro que la orientamos en eso. Pero cuénteme, María Catalina: ¿cómo han estado usted y Juliana desde la separación?"},
+    {who:"maria", text:"Necesito que le fijen una cuota de alimentos a mi hija Sofía, de doce años. Nos separamos hace poco y él no nos ha dado nada."},
+    {who:"vivian", text:"Claro que la orientamos en eso. Pero cuénteme, María Catalina: ¿cómo han estado usted y Sofía desde la separación?"},
     {who:"maria", text:"Pues… la verdad es que nos separamos porque ya no aguanté más golpes."},
     {who:"narrador", text:"Y ahí el equipo entendió que esto no era una consulta cualquiera. Porque detrás de una cuota de alimentos, casi siempre hay una historia entera esperando para ser contada."}
   ],
@@ -781,7 +781,7 @@ const chapters = [
   eyebrow:"Espacio Violeta — sala privada", art:scenePrivateRoom("var(--terracotta)"), accent:"var(--terracotta)",
   lines:[
     {who:"maria", text:"Yo estuve trece años casada con Jesús Rendón. Él es pastor de una iglesia por el barrio, y siempre me repetía que la Biblia manda que la mujer obedezca al marido."},
-    {who:"maria", text:"Todo lo económico lo manejaba él. Yo nunca trabajé por fuera; me dediqué a la casa, a criar a Juliana, y así se me fue pasando la juventud, sin darme cuenta."},
+    {who:"maria", text:"Todo lo económico lo manejaba él. Yo nunca trabajé por fuera; me dediqué a la casa, a criar a Sofía, y así se me fue pasando la juventud, sin darme cuenta."},
     {who:"maria", text:"Y los golpes… esos empezaron hace años. Al principio era un empujón, un grito. Con el tiempo se fue poniendo peor."},
     {who:"narrador", text:"Óigame esto bien, porque aquí es donde el cuento pega el timonazo: María Catalina no vino a contar un episodio, vino cargando una historia de años. Y apenas estábamos oyendo la primera capa."}
   ],
@@ -791,25 +791,25 @@ const chapters = [
   id:"trasfondo", kicker:"Lo que nadie sabía", title:"Separados… pero el peligro no se fue",
   eyebrow:"Espacio Violeta — sala privada", art:scenePrivateRoom("var(--gold)"), accent:"var(--gold)",
   lines:[
-    {who:"maria", text:"Hace unos días nos separamos de verdad. Ahora vivo donde mi mamá, con Juliana. Pero él no me deja tranquila: me manda mensajes diciendo que vuelva a la casa, o que si no, él va a ir por mí."},
+    {who:"maria", text:"Hace unos días nos separamos de verdad. Ahora vivo donde mi mamá, con Sofía. Pero él no me deja tranquila: me manda mensajes diciendo que vuelva a la casa, o que si no, él va a ir por mí."},
     {who:"maria", text:"Una noche intentó entrar a la fuerza donde mi mamá. Gracias a Dios los vecinos hicieron bulla y él se fue. Si no, no sé qué hubiera pasado."},
     {who:"maria", text:"Y hace ocho días me lo encontré en la galería, haciendo mercado. Ahí fue que me alcanzó a golpear, delante de toda la gente. Este morado es de eso, y todavía no me sana bien."},
-    {who:"maria", text:"Yo siento que corro peligro. Y no solo yo: también mi mamá, y Juliana."},
+    {who:"maria", text:"Yo siento que corro peligro. Y no solo yo: también mi mamá, y Sofía."},
     {who:"narrador", text:"Y ahí quedó plantado el nudo del caso: separación, amenazas, un intento de violación de domicilio, y una agresión en plena calle, hace apenas una semana. Pilas, futuro abogado, porque esto apenas va empezando."}
   ],
   legal:{title:"Por qué esto no es «solo una cuota de alimentos»", items:[
     "Las amenazas de volver por la fuerza, sumadas al intento de ingreso a la vivienda, son <em>indicadores de riesgo grave e inminente</em>.",
     "El <em>control económico</em> sostenido durante el matrimonio también es una forma reconocida de violencia intrafamiliar.",
-    "Un caso puede necesitar varias rutas a la vez: alimentos para Juliana, protección para toda la familia, salud y, eventualmente, denuncia penal."
+    "Un caso puede necesitar varias rutas a la vez: alimentos para Sofía, protección para toda la familia, salud y, eventualmente, denuncia penal."
   ]}, flow:null
 },
 {
-  id:"equipo", kicker:"Entre bastidores", title:"Valentina consulta a la profesora Alessandra",
+  id:"equipo", kicker:"Entre bastidores", title:"Valentina consulta a la profesora Alexandra",
   eyebrow:"Sala de casos — Consultorio Jurídico", art:sceneTeam(), accent:"var(--teal)",
   lines:[
-    {who:"valentina", text:"Profesora Alessandra, el caso que traía María Catalina no era solo una cuota de alimentos. Hay amenazas, un intento de entrar a la fuerza a la casa de la mamá, y una agresión hace ocho días en la galería."},
+    {who:"valentina", text:"Profesora Alexandra, el caso que traía María Catalina no era solo una cuota de alimentos. Hay amenazas, un intento de entrar a la fuerza a la casa de la mamá, y una agresión hace ocho días en la galería."},
     {who:"equipo", text:"Buen trabajo evitando que lo repita dos veces. Vamos a mirar, paso por paso, qué rutas se activan antes de volver donde ella."},
-    {who:"narrador", text:"Y así, mientras Vivian acompañaba a María Catalina, Valentina y la profesora Alessandra empezaban a trazar el mapa jurídico del caso, sin dejarla sola ni un momento."}
+    {who:"narrador", text:"Y así, mientras Vivian acompañaba a María Catalina, Valentina y la profesora Alexandra empezaban a trazar el mapa jurídico del caso, sin dejarla sola ni un momento."}
   ],
   legal:null, flow:null
 },
@@ -836,13 +836,13 @@ const chapters = [
   lines:[
     {who:"valentina", text:"Necesito preguntarle algo importante, con toda la calma: ¿usted cree que él puede volver a hacerle daño, a usted o a su familia?"},
     {who:"maria", text:"Sí, doctora. Después de lo de la galería y de lo que intentó donde mi mamá, yo de verdad siento que corremos peligro las tres."},
-    {who:"narrador", text:"Ahí quedó clara la prioridad número uno: la seguridad de María Catalina, de Juliana y de la abuela. Y esa, óigame bien, no tiene que esperar a que se resuelva ningún proceso penal."}
+    {who:"narrador", text:"Ahí quedó clara la prioridad número uno: la seguridad de María Catalina, de Sofía y de la abuela. Y esa, óigame bien, no tiene que esperar a que se resuelva ningún proceso penal."}
   ],
   legal:{title:"Marco normativo", items:[
     "La protección puede solicitarse <em>antes</em> de presentar la denuncia penal (Ley 1719 de 2014).",
     "Si el riesgo ocurre en el contexto familiar, aplica la <em>Comisaría de Familia</em> (Ley 2126 de 2021 y Ley 1257 de 2008).",
     "Si el riesgo es grave o inmediato — como un intento de ingreso a la vivienda —, se activa la <em>Línea 123 — Policía Nacional</em>, sin perjuicio de activar Fiscalía y Salud simultáneamente.",
-    "La misma Comisaría de Familia es competente para fijar, de manera independiente, la <em>cuota de alimentos</em> de Juliana."
+    "La misma Comisaría de Familia es competente para fijar, de manera independiente, la <em>cuota de alimentos</em> de Sofía."
   ]},
   flow:{accent:"var(--terracotta)", branches:[
     {label:"Contexto familiar", nodes:["Comisaría de Familia","Órdenes: alejamiento, desalojo, protección policial","Fijación de cuota de alimentos"]},
@@ -850,12 +850,12 @@ const chapters = [
   ]}
 },
 {
-  id:"hija", kicker:"Paso 5 · ¿Hay una niña, niño o adolescente?", title:"Juliana, doce años, también tiene miedo",
+  id:"hija", kicker:"Paso 5 · ¿Hay una niña, niño o adolescente?", title:"Sofía, doce años, también tiene miedo",
   eyebrow:"Ruta de restablecimiento de derechos", art:sceneRoute("var(--gold)"), accent:"var(--gold)",
   lines:[
-    {who:"maria", text:"Mi hija Juliana tiene doce años y vive conmigo donde mi mamá desde que nos separamos. La dejé allá hoy pa' venir sola hasta acá."},
+    {who:"maria", text:"Mi hija Sofía tiene doce años y vive conmigo donde mi mamá desde que nos separamos. La dejé allá hoy pa' venir sola hasta acá."},
     {who:"maria", text:"Ella estaba en la casa la noche que él intentó entrar a la fuerza. Desde entonces no se quiere despegar de mí, y le da miedo hasta ir sola al colegio."},
-    {who:"vivian", text:"Gracias por contarnos eso. Juliana también necesita una ruta propia de atención, no solo usted."},
+    {who:"vivian", text:"Gracias por contarnos eso. Sofía también necesita una ruta propia de atención, no solo usted."},
     {who:"narrador", text:"Y así, lo que llegó como una cuota de alimentos, resultó siendo el caso de una familia entera. Una misma historia puede necesitar tocar varias puertas al mismo tiempo."}
   ],
   legal:{title:"Marco normativo", items:[
@@ -864,7 +864,7 @@ const chapters = [
     "No debe manejarse como una consulta jurídica ordinaria: el Consultorio debe promover la activación institucional inmediata."
   ]},
   flow:{accent:"var(--gold)", branches:[
-    {label:"Ruta para Juliana", nodes:["Espacio Violeta","Sector salud (atención urgente)","ICBF / Defensoría de Familia","Fiscalía (denuncia penal)"]}
+    {label:"Ruta para Sofía", nodes:["Espacio Violeta","Sector salud (atención urgente)","ICBF / Defensoría de Familia","Fiscalía (denuncia penal)"]}
   ]}
 },
 {
@@ -897,7 +897,7 @@ const chapters = [
   lines:[
     {who:"equipo", text:"Registremos la actuación de hoy, y confirmemos que la remisión a salud y a la Comisaría sí llegó a buen puerto."},
     {who:"valentina", text:"O sea que esto no es solo remitirla y ya."},
-    {who:"equipo", text:"No, para nada. Hay que verificar qué pasó con la remisión, si le otorgaron medidas de protección, cómo va la cuota de alimentos, y qué necesitan ella y Juliana de aquí en adelante."}
+    {who:"equipo", text:"No, para nada. Hay que verificar qué pasó con la remisión, si le otorgaron medidas de protección, cómo va la cuota de alimentos, y qué necesitan ella y Sofía de aquí en adelante."}
   ],
   legal:null,
   flow:{accent:"var(--teal)", branches:[
