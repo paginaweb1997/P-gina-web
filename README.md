@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -20,6 +21,7 @@
     --gold:#e3ac52;
     --teal:#59b09d;
     --terracotta:#d06a4f;
+    --lavender:#8f7fd1;
     --line:rgba(246,237,231,0.14);
     --line-strong:rgba(246,237,231,0.28);
     --shadow: 0 30px 60px -25px rgba(10,4,12,0.65);
@@ -211,6 +213,7 @@
   .line--valentina .line__avatar{background:var(--gold);}
   .line--maria .line__avatar{background:var(--rose);}
   .line--equipo .line__avatar{background:var(--teal);}
+  .line--vivian .line__avatar{background:var(--lavender);}
   .line__text{
     background:var(--surface-2);border:1px solid var(--line);
     padding:10px 14px;border-radius:14px;font-size:.95rem;line-height:1.5;
@@ -355,6 +358,7 @@
   <footer class="foot">
     <span>Historia ficticia con fines pedagógicos para el Consultorio Jurídico FUP · Sede Norte, Santander de Quilichao, Cauca.</span>
     <span>Contenido de orientación educativa — debe validarse con la normativa vigente y los protocolos institucionales.</span>
+    <span>La narración usa la voz en español de tu dispositivo; el acento puede variar según el navegador.</span>
   </footer>
 </div>
 
@@ -363,8 +367,8 @@
 "use strict";
 
 /* ============ DATA ============ */
-const AVA = {narrador:"N", valentina:"V", maria:"MC", equipo:"E"};
-const WHO = {narrador:"Narradora", valentina:"Valentina · estudiante", maria:"María Catalina", equipo:"Equipo docente"};
+const AVA = {narrador:"N", valentina:"V", maria:"MC", equipo:"E", vivian:"PS"};
+const WHO = {narrador:"Narrador", valentina:"Valentina · estudiante", maria:"María Catalina", equipo:"Equipo docente", vivian:"Vivian · psicóloga"};
 
 function svgWrap(inner, bg, extraDefs){
   return `<svg viewBox="0 0 520 300" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
@@ -438,6 +442,52 @@ function lampPost(x,y){
     <circle cx="0" cy="-74" r="5" fill="#ffe3a8"/>
   </g>`;
 }
+function sunAfternoon(cx,cy,r){
+  return `<circle cx="${cx}" cy="${cy}" r="${r*1.7}" fill="#f2a860" opacity=".22" class="fx-glow"/>
+  <circle cx="${cx}" cy="${cy}" r="${r}" fill="#ffd899"/>`;
+}
+function cloud(x,y,s,cls){
+  s=s||1;
+  return `<g transform="translate(${x} ${y}) scale(${s})" opacity=".5" class="${cls||''}">
+    <ellipse cx="0" cy="0" rx="22" ry="9" fill="#fbe6c8"/>
+    <ellipse cx="16" cy="-4" rx="14" ry="8" fill="#fbe6c8"/>
+    <ellipse cx="-16" cy="-2" rx="12" ry="7" fill="#fbe6c8"/>
+  </g>`;
+}
+function signText(x,y,content,opts){
+  opts = opts||{};
+  return `<text x="${x}" y="${y}" font-family="Work Sans, sans-serif" font-size="${opts.size||11}" letter-spacing="${opts.spacing||1}" fill="${opts.color||'#f6ede7'}" opacity="${opts.opacity!=null?opts.opacity:.85}" text-anchor="${opts.anchor||'start'}" font-weight="${opts.weight||600}">${content}</text>`;
+}
+function scaleIcon(x,y,s,color){
+  s=s||1; color=color||'#e3ac52';
+  return `<g transform="translate(${x} ${y}) scale(${s})" stroke="${color}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".85">
+    <path d="M0 -14 V14"/><path d="M-16 -10 H16"/>
+    <path d="M-16 -10 L-24 4 a8 6 0 0 0 16 0 Z"/>
+    <path d="M16 -10 L8 4 a8 6 0 0 0 16 0 Z"/>
+    <path d="M-9 14 H9"/>
+  </g>`;
+}
+function bookshelf(x,y,w,h){
+  const cols = ['#c1567f','#e0ac52','#59b09d','#8f7fd1','#d06a4f','#7a4a63'];
+  let books = '';
+  let bx = x;
+  let i = 0;
+  while(bx < x+w-6){
+    const bw = 7 + (i%3)*2;
+    const bh = h - 6 - (i%4)*5;
+    books += `<rect x="${bx}" y="${y+h-bh}" width="${bw-1}" height="${bh}" fill="${cols[i%cols.length]}" opacity=".8"/>`;
+    bx += bw; i++;
+  }
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#241730" opacity=".7"/>${books}
+  <rect x="${x}" y="${y+h}" width="${w}" height="4" fill="#1c1120"/>`;
+}
+function callWaves(x,y,color){
+  color = color||'#59b09d';
+  return `<g transform="translate(${x} ${y})" stroke="${color}" fill="none" stroke-width="2" stroke-linecap="round" opacity=".8">
+    <path d="M0 0 q6 -6 0 -12" class="fx-flicker"/>
+    <path d="M6 4 q12 -12 0 -24" class="fx-flicker d2"/>
+  </g>`;
+}
 function person(cx, cy, opts){
   opts = opts||{};
   const skirt = opts.pattern ? `url(#ruana)` : (opts.skirt||'#7a4a63');
@@ -463,59 +513,64 @@ const HAIR_SHORT_B = "M-15 -60 Q-18 -74 0 -76 Q18 -74 15 -60 Q20 -50 10 -44 Q0 -
 
 function sceneHook(){
   return svgWrap(`
-    <circle cx="420" cy="66" r="50" fill="#e3ac52" opacity=".22" class="fx-glow"/>
-    <circle cx="420" cy="66" r="24" fill="#f4cf8a" opacity=".85"/>
-    ${firefly(60,60,'#efe0ea')}${firefly(120,40,'#efe0ea','d2')}${firefly(200,80,'#efe0ea','d3')}
+    ${sunAfternoon(430,64,26)}
+    ${cloud(90,50,1,'fx-drift')}${cloud(280,30,.7,'fx-driftback')}
     ${mountains()}
     ${townRow(258)}
-    <path d="M0 272 L200 262 L340 270 L520 258 L520 300 L0 300 Z" fill="#1c0f26"/>
-    <path d="M180 300 L230 264 L250 264 L235 300 Z" fill="#150a1d" opacity=".7"/>
-    ${lampPost(230,258)}
+    <path d="M0 272 L200 262 L340 270 L520 258 L520 300 L0 300 Z" fill="#2a1830"/>
+    <rect x="176" y="228" width="98" height="34" rx="3" fill="#20111f"/>
+    ${signText(225,249,'CONSULTORIO JURÍDICO · FUP',{size:8,spacing:.5,anchor:'middle',color:'#e3ac52'})}
     ${moto(300,268,0.9)}${moto(340,272,0.75)}
-    ${firefly(280,150,'#e0779f','d2')}${firefly(360,190,'#59b09d','d3')}
-  `, ["#3a2140","#150a1d"]);
+    ${bird(60,60,.9,'fx-drift')}${bird(120,40,.7,'fx-driftback')}
+  `, ["#8a6a52","#2a1830"]);
 }
 function sceneStreetWorry(){
   return svgWrap(`
-    <circle cx="90" cy="50" r="34" fill="#4a2c52" opacity=".5"/>
+    ${sunAfternoon(90,54,22)}
+    ${cloud(360,40,1,'fx-driftback')}
     ${mountains()}
     ${townRow(250)}
-    <path d="M0 262 L520 262 L520 300 L0 300 Z" fill="#1c0f26"/>
-    <path d="M0 262 Q260 250 520 262" stroke="rgba(255,255,255,.08)" stroke-width="10" fill="none"/>
-    ${lampPost(370,250)}
-    <ellipse cx="150" cy="284" rx="50" ry="8" fill="rgba(0,0,0,.35)"/>
+    <path d="M0 262 L520 262 L520 300 L0 300 Z" fill="#2a1830"/>
+    <rect x="330" y="150" width="150" height="112" fill="#22132a"/>
+    <rect x="345" y="168" width="120" height="80" rx="4" fill="#3d2a45" opacity=".9"/>
+    ${signText(405,158,'ESPACIO VIOLETA',{size:9,spacing:.6,anchor:'middle',color:'#e0779f'})}
+    <ellipse cx="150" cy="284" rx="50" ry="8" fill="rgba(0,0,0,.3)"/>
+    <ellipse cx="180" cy="286" rx="18" ry="4" fill="rgba(0,0,0,.2)"/>
     ${person(150,250,{skirt:'url(#ruana)',pattern:true,hair:HAIR_LONG_CURLY})}
-    <rect x="132" y="196" width="24" height="15" rx="3" fill="#dfe6f0" opacity=".92"/>
-    <rect x="135" y="199" width="18" height="9" rx="1" fill="#89b7d8" opacity=".9" class="fx-glow"/>
-    ${firefly(430,60,'#efe0ea')}${firefly(470,100,'#efe0ea','d3')}
-  `, ["#33203a","#170c1f"]);
+    <path d="M126 195 q10 -10 22 -2" stroke="#c1a6b8" stroke-width="3" fill="none" stroke-linecap="round" opacity=".9"/>
+    <rect x="128" y="200" width="20" height="12" rx="2" fill="#dfe6f0" opacity=".85"/>
+  `, ["#c99a63","#2a1830"]);
 }
 function sceneReception(){
   return svgWrap(`
     <rect x="0" y="0" width="520" height="300" fill="#3d2743"/>
-    <path d="M340 0 L520 0 L520 220 L400 300 L300 300 Z" fill="#4a2c52" opacity=".45"/>
-    <path d="M370 -10 L470 -10 L430 230 L340 230 Z" fill="url(#lamp)" opacity=".35"/>
+    <path d="M330 0 L520 0 L520 230 L400 300 L300 300 Z" fill="#4a2c52" opacity=".4"/>
+    <path d="M360 -10 L480 -10 L440 235 L335 235 Z" fill="#f2c98a" opacity=".16"/>
     <rect x="0" y="222" width="520" height="78" fill="#2c1a30"/>
-    <rect x="60" y="205" width="230" height="24" rx="6" fill="#583a5f"/>
-    <rect x="70" y="196" width="90" height="12" rx="4" fill="#e0ac52" opacity=".85"/>
-    <circle cx="450" cy="150" r="4" fill="#e0779f"/><circle cx="465" cy="170" r="3" fill="#e3ac52"/>
+    <rect x="52" y="200" width="240" height="28" rx="6" fill="#583a5f"/>
+    <rect x="52" y="200" width="240" height="6" rx="3" fill="#e3ac52" opacity=".7"/>
+    ${signText(70,193,'CONSULTORIO JURÍDICO FUP',{size:9,spacing:.6,color:'#f6ede7',opacity:.9})}
+    ${signText(70,214,'Sede Norte · Espacio Violeta',{size:7.5,spacing:.4,color:'#d9c6d6',weight:400})}
+    ${scaleIcon(160,178,0.55,'#e3ac52')}
+    ${bookshelf(420,120,70,90)}
     <path d="M40 300 Q40 250 60 240 Q80 250 80 300 Z" fill="#3f6a54"/>
     <path d="M45 300 Q45 260 60 250 Q75 260 75 300 Z" fill="#4f8265"/>
     <g class="fx-bob">${person(210,225,{skirt:'#c1567f',hair:HAIR_LONG_CURLY})}</g>
-    ${person(345,232,{pattern:true,hair:HAIR_BRAID,bruise:true})}
+    ${person(340,232,{pattern:true,hair:HAIR_BRAID,bruise:true})}
     <path d="M255 168 q26 -14 52 2" stroke="#e3ac52" stroke-width="2" fill="none" opacity=".6" stroke-linecap="round"/>
-  `, ["#4f3055","#241626"]);
+  `, ["#5a3a5f","#241626"]);
 }
 function scenePrivateRoom(accent){
   return svgWrap(`
     <rect x="0" y="0" width="520" height="300" fill="#3a2440"/>
     <rect x="34" y="30" width="452" height="240" rx="20" fill="#2c1a30" opacity=".55"/>
-    <circle cx="420" cy="90" r="46" fill="url(#lamp)" class="fx-glow"/>
-    <circle cx="420" cy="90" r="9" fill="#ffe3a8"/>
+    <rect x="365" y="46" width="90" height="118" rx="4" fill="#f2c98a" opacity=".14"/>
+    <rect x="46" y="46" width="90" height="30" rx="4" fill="${accent}" opacity=".12"/>
+    ${signText(56,66,'ESPACIO VIOLETA',{size:8,spacing:.5,color:accent,weight:600,opacity:.8})}
     <rect x="60" y="150" width="4" height="90" fill="#583a5f" opacity=".6"/>
     <path d="M60 150 Q40 190 60 240" stroke="#583a5f" stroke-width="4" fill="none" opacity=".5"/>
-    <rect x="120" y="70" width="70" height="46" rx="8" fill="${accent}" opacity=".16"/>
-    <path d="M132 96 q17 -18 34 0 q17 -18 34 0" stroke="${accent}" stroke-width="2.4" fill="none" opacity=".7" stroke-linecap="round"/>
+    <rect x="120" y="90" width="70" height="46" rx="8" fill="${accent}" opacity=".16"/>
+    <path d="M132 116 q17 -18 34 0 q17 -18 34 0" stroke="${accent}" stroke-width="2.4" fill="none" opacity=".7" stroke-linecap="round"/>
     <g class="fx-bob">${person(225,228,{skirt:'#c1567f',hair:HAIR_LONG_CURLY})}</g>
     ${person(340,232,{pattern:true,hair:HAIR_BRAID,bruise:true})}
     <path d="M40 300 Q40 265 55 258 Q70 265 70 300 Z" fill="#3f6a54" opacity=".8"/>
@@ -524,18 +579,109 @@ function scenePrivateRoom(accent){
 function sceneTeam(){
   return svgWrap(`
     <rect x="0" y="0" width="520" height="300" fill="#241730"/>
+    <rect x="360" y="60" width="120" height="110" rx="4" fill="#f2c98a" opacity=".12"/>
+    ${bookshelf(20,50,90,120)}
+    ${signText(65,44,'SALA DE CASOS',{size:8,spacing:1,anchor:'middle',color:'#d9c6d6',weight:600,opacity:.7})}
     <ellipse cx="260" cy="255" rx="230" ry="26" fill="#1c1120"/>
     <rect x="70" y="235" width="380" height="16" rx="8" fill="#4a2c52"/>
     <rect x="150" y="150" width="46" height="34" rx="4" fill="#3a2440" opacity=".9"/>
     <path d="M150 150 h46" stroke="#e3ac52" stroke-width="2" opacity=".6"/>
-    <circle cx="330" cy="90" r="34" fill="url(#lamp)" class="fx-glow"/>
-    <circle cx="120" cy="130" r="3" fill="#e0779f"/><circle cx="380" cy="150" r="3" fill="#59b09d"/>
+    ${scaleIcon(330,120,0.5,'#e0ac52')}
     <g class="fx-bob">${person(150,232,{skirt:'#c1567f',hair:HAIR_LONG_CURLY})}</g>
     ${person(280,238,{skirt:'#59b09d',hair:HAIR_SHORT_A})}
     ${person(390,234,{skirt:'#e0ac52',hair:HAIR_SHORT_B})}
     <rect x="255" y="205" width="30" height="22" rx="3" fill="#583a5f"/>
     <rect x="370" y="208" width="26" height="20" rx="3" fill="#583a5f"/>
   `, ["#3a2440","#180e1f"]);
+}
+function sceneVivian(){
+  return svgWrap(`
+    <rect x="0" y="0" width="520" height="300" fill="#2c1a30"/>
+    <rect x="330" y="40" width="150" height="130" rx="4" fill="#f2c98a" opacity=".12"/>
+    ${bookshelf(20,60,70,100)}
+    <g class="fx-bob">${person(150,235,{skirt:'#c1567f',hair:HAIR_LONG_CURLY})}</g>
+    <rect x="163" y="195" width="16" height="22" rx="3" fill="#e3ac52" opacity=".9"/>
+    ${callWaves(186,196,'#59b09d')}
+    <g opacity=".92">${person(400,236,{skirt:'#8f7fd1',hair:HAIR_SHORT_B})}</g>
+    <rect x="380" y="190" width="26" height="20" rx="3" fill="#583a5f"/>
+    ${signText(400,170,'VIVIAN · PSICÓLOGA',{size:8,spacing:.6,anchor:'middle',color:'#8f7fd1',weight:600})}
+  `, ["#3a2440","#180e1f"]);
+}
+function badgeEmblem(x,y,s,color){
+  s=s||1; color=color||'#e3ac52';
+  return `<g transform="translate(${x} ${y}) scale(${s})">
+    <path d="M0 -22 L20 -14 L20 6 Q20 24 0 32 Q-20 24 -20 6 L-20 -14 Z" fill="none" stroke="${color}" stroke-width="2.4" opacity=".85"/>
+    ${scaleIcon(0,4,0.62,color)}
+  </g>`;
+}
+function columnsFacade(x,y,w,h,color){
+  color = color || '#e7ddc9';
+  let cols='';
+  const n = Math.floor(w/26);
+  for(let i=0;i<n;i++){
+    cols += `<rect x="${x+10+i*26}" y="${y+18}" width="9" height="${h-18}" fill="${color}" opacity=".85"/>`;
+  }
+  return `
+  <path d="M${x} ${y+18} L${x+w/2} ${y-14} L${x+w} ${y+18} Z" fill="${color}" opacity=".9"/>
+  <rect x="${x}" y="${y+14}" width="${w}" height="8" fill="${color}"/>
+  ${cols}
+  <rect x="${x-6}" y="${y+h}" width="${w+12}" height="8" fill="${color}" opacity=".9"/>`;
+}
+function hospitalCross(x,y,s){
+  s=s||1;
+  return `<g transform="translate(${x} ${y}) scale(${s})">
+    <rect x="-16" y="-16" width="32" height="32" rx="7" fill="#c1533f"/>
+    <rect x="-4" y="-11" width="8" height="22" fill="#fbe9e4"/>
+    <rect x="-11" y="-4" width="22" height="8" fill="#fbe9e4"/>
+  </g>`;
+}
+function sceneHospital(){
+  return svgWrap(`
+    <rect x="0" y="0" width="520" height="300" fill="#e9dcc9"/>
+    <path d="M0 210 L520 210 L520 300 L0 300 Z" fill="#cdbda0"/>
+    <rect x="60" y="80" width="400" height="130" fill="#f4ede0"/>
+    <rect x="60" y="80" width="400" height="14" fill="#8fa79b"/>
+    ${hospitalCross(260,60,1.15)}
+    ${signText(260,140,'IPS · URGENCIAS',{size:12,spacing:1,anchor:'middle',color:'#3a5148',weight:700})}
+    ${signText(260,158,'Atención integral y gratuita',{size:8,spacing:.4,anchor:'middle',color:'#5a6b62',weight:400})}
+    <rect x="90" y="170" width="70" height="40" rx="4" fill="#8fa79b" opacity=".5"/>
+    <rect x="360" y="170" width="70" height="40" rx="4" fill="#8fa79b" opacity=".5"/>
+    <rect x="230" y="182" width="60" height="10" rx="4" fill="#c1533f" opacity=".8"/>
+    <g class="fx-bob">${person(190,235,{skirt:'url(#ruana)',pattern:true,hair:HAIR_LONG_CURLY,bruise:true})}</g>
+    ${person(320,238,{skirt:'#3a5148',hair:HAIR_SHORT_A})}
+    <rect x="298" y="196" width="46" height="14" rx="3" fill="#fbe9e4"/>
+    <rect x="298" y="196" width="46" height="14" rx="3" fill="none" stroke="#3a5148" stroke-width="1.4"/>
+  `, ["#efe4d2","#cdbda0"]);
+}
+function sceneFiscalia(){
+  return svgWrap(`
+    <rect x="0" y="0" width="520" height="300" fill="#dfe3ea"/>
+    <path d="M0 230 L520 230 L520 300 L0 300 Z" fill="#b7bfcc"/>
+    ${columnsFacade(130,110,260,90,'#eef1f6')}
+    <rect x="115" y="222" width="290" height="10" fill="#9aa3b3"/>
+    ${badgeEmblem(260,72,1,'#8a6f2c')}
+    ${signText(260,44,'FISCALÍA GENERAL DE LA NACIÓN',{size:9.5,spacing:.5,anchor:'middle',color:'#3a3f4d',weight:700})}
+    <rect x="30" y="0" width="10" height="230" fill="#b1543f" opacity=".8"/>
+    <rect x="30" y="0" width="10" height="76" fill="#e3ac52" opacity=".85"/>
+    <rect x="30" y="76" width="10" height="76" fill="#2f5f8a" opacity=".85"/>
+    <g class="fx-bob">${person(230,246,{skirt:'url(#ruana)',pattern:true,hair:HAIR_LONG_CURLY})}</g>
+    ${person(330,250,{skirt:'#2f5f8a',hair:HAIR_SHORT_B})}
+  `, ["#eef1f6","#b7bfcc"]);
+}
+function sceneComisaria(){
+  return svgWrap(`
+    <rect x="0" y="0" width="520" height="300" fill="#e4dbe6"/>
+    <path d="M0 228 L520 228 L520 300 L0 300 Z" fill="#b9a9bd"/>
+    <rect x="120" y="110" width="280" height="118" fill="#f2ecf4"/>
+    <rect x="120" y="110" width="280" height="14" fill="#6f4f74"/>
+    ${badgeEmblem(260,78,0.95,'#6f4f74')}
+    ${signText(260,150,'COMISARÍA DE FAMILIA',{size:11,spacing:.8,anchor:'middle',color:'#4a2c52',weight:700})}
+    <rect x="150" y="170" width="34" height="58" fill="#c9bccb"/>
+    <rect x="336" y="170" width="34" height="58" fill="#c9bccb"/>
+    <rect x="245" y="188" width="30" height="40" fill="#6f4f74" opacity=".85"/>
+    <g class="fx-bob">${person(210,246,{skirt:'url(#ruana)',pattern:true,hair:HAIR_LONG_CURLY,bruise:true})}</g>
+    ${person(320,250,{skirt:'#4a2c52',hair:HAIR_SHORT_A})}
+  `, ["#f2ecf4","#b9a9bd"]);
 }
 function sceneRoute(accent){
   return svgWrap(`
@@ -559,79 +705,121 @@ function sceneRoute(accent){
 }
 function sceneClosing(){
   return svgWrap(`
-    <circle cx="120" cy="70" r="60" fill="#e3ac52" opacity=".2" class="fx-glow"/>
+    ${sunAfternoon(120,66,30)}
+    ${cloud(340,44,.9,'fx-drift')}
     ${mountains()}
     ${townRow(252)}
-    <path d="M0 264 L520 264 L520 300 L0 300 Z" fill="#1c0f26"/>
-    <rect x="200" y="196" width="50" height="68" fill="#3a2440"/>
-    <path d="M195 196 L225 172 L255 196 Z" fill="#a45a4a"/>
-    <rect x="218" y="228" width="14" height="36" fill="#ffe3a8" class="fx-glow"/>
-    <g class="fx-bob">${person(300,240,{skirt:'#c1567f',hair:HAIR_LONG_CURLY})}</g>
+    <path d="M0 264 L520 264 L520 300 L0 300 Z" fill="#2a1830"/>
+    <rect x="196" y="196" width="54" height="68" fill="#3a2440"/>
+    <path d="M191 196 L223 170 L255 196 Z" fill="#c1785a"/>
+    <rect x="216" y="228" width="14" height="36" fill="#f2c98a" opacity=".8"/>
+    ${signText(223,190,'FUP',{size:7,spacing:1,anchor:'middle',color:'#e3ac52',weight:700})}
+    <g class="fx-bob">${person(310,240,{skirt:'url(#ruana)',pattern:true,hair:HAIR_LONG_CURLY})}</g>
     ${bird(60,50,1,'fx-drift')}${bird(100,30,.8,'fx-driftback')}${bird(390,60,.9,'fx-drift')}
-    ${firefly(430,110,'#e3ac52')}${firefly(460,150,'#e0779f','d2')}${firefly(150,120,'#59b09d','d3')}
-  `, ["#4a2c52","#1c1120"]);
+  `, ["#c99a63","#2a1830"]);
 }
 
 const chapters = [
 {
-  id:"hook", kicker:"Antes de empezar", title:"El caso que llegó un martes cualquiera",
-  eyebrow:"Santander de Quilichao, Cauca", art:sceneHook(), accent:"var(--rose)",
+  id:"hook", kicker:"Antes de empezar", title:"Un viernes en la tarde, en Santander de Quilichao",
+  eyebrow:"18 de septiembre de 2026 · Cauca", art:sceneHook(), accent:"var(--rose)",
   lines:[
-    {who:"narrador", text:"Les voy a contar un caso que llegó al Consultorio Jurídico de la FUP, Sede Norte. Al principio parecía una consulta sencilla."},
-    {who:"narrador", text:"Pero cuando la usuaria empezó a hablar, el equipo entendió que era mucho más delicado de lo que parecía."}
+    {who:"narrador", text:"Arrímese, que le voy a contar un cuento de este Cauca bravo y bonito. Un viernes 18 de septiembre de 2026, con el sol de la tarde todavía pegando duro sobre Santander de Quilichao."},
+    {who:"narrador", text:"Ese día llegó al Consultorio Jurídico de la FUP una mujer que decía venir por una simple cuota de alimentos."},
+    {who:"narrador", text:"Pero óigame bien esto: las apariencias, en este oficio, casi nunca dicen toda la verdad."}
   ],
   legal:null, flow:null
 },
 {
-  id:"llegada", kicker:"Minutos antes", title:"María Catalina duda en la puerta",
-  eyebrow:"Fuera del Consultorio Jurídico", art:sceneStreetWorry(), accent:"var(--rose)",
+  id:"llegada", kicker:"Minutos antes", title:"Un pie que entra y otro que quiere salir corriendo",
+  eyebrow:"Fuera del Consultorio Jurídico · FUP Sede Norte", art:sceneStreetWorry(), accent:"var(--rose)",
   lines:[
-    {who:"narrador", text:"María Catalina tiene 38 años. Llegó desde su vereda, con un pañolón cubriéndole parte del rostro y un morado que ya no puede esconder."},
-    {who:"maria", text:"Vine porque alguien me dijo que aquí orientan a la gente… pero no sé si vine al lugar correcto."}
+    {who:"narrador", text:"Ahí la tienen: María Catalina, treinta y ocho años, parada frente a la puerta, con un pie que quería entrar y el otro que quería salir corriendo pa'l otro lado."},
+    {who:"narrador", text:"Se tapaba el cachete con la mano, como si con eso alcanzara a esconder también el susto. Debajo, un morado que ya no había maquillaje que lo disimulara."},
+    {who:"maria", text:"Vine porque necesito arreglar una cuota de alimentos pa' mi hija… al menos eso fue lo que me repetí todo el camino, pa' animarme a entrar."}
   ],
   legal:null, flow:null
 },
 {
-  id:"recepcion", kicker:"Paso 1 · Recepción segura", title:"Un lugar privado, sin apuro",
+  id:"recepcion", kicker:"Paso 1 · Recepción segura", title:"Aquí la atendemos, no se preocupe",
   eyebrow:"Recepción — Espacio Violeta", art:sceneReception(), accent:"var(--rose)",
   lines:[
-    {who:"valentina", text:"Buenos días. Soy Valentina, estudiante del Consultorio Jurídico. Si prefiere, podemos hablar en un espacio privado."},
-    {who:"maria", text:"Gracias… es que no sé ni por dónde empezar."},
-    {who:"valentina", text:"No tiene que contarlo todo de una vez, ni de manera perfecta. Primero la vamos a escuchar."},
-    {who:"narrador", text:"Antes de pensar en denuncias o instituciones, el estudiante escucha, protege la privacidad y evita que la persona repita innecesariamente lo sucedido."}
+    {who:"valentina", text:"Buenas tardes, ¿la puedo ayudar? Aquí la atendemos con confianza, no se preocupe."},
+    {who:"maria", text:"Vengo porque necesito una cuota de alimentos pa' mi hija… pero también hay otras cosas."},
+    {who:"valentina", text:"Con gusto la orientamos en eso. Si gusta, pasamos a un lugar más privado, y ahí me cuenta con calma todo lo que necesite."},
+    {who:"narrador", text:"Y ojo con esto, porque aquí está la clave del primer paso: antes de hablar de denuncias o de cuotas de alimentos, se escucha, se protege la intimidad, y no se hace repetir a nadie lo que ya le costó tanto decir."}
   ],
   legal:{title:"Principio transversal", items:["Evitar preguntas innecesarias, juicios o cuestionamientos sobre su comportamiento.","<em>Evitar la revictimización secundaria</em> en cada contacto con la usuaria."]},
   flow:null
 },
 {
-  id:"valoracion", kicker:"Paso 2 · Valoración inicial", title:"Escuchar para saber qué rutas activar",
+  id:"vivian", kicker:"Apoyo psicosocial", title:"Vivian se une a la conversación",
+  eyebrow:"Espacio Violeta — atención conjunta", art:sceneVivian(), accent:"var(--lavender)",
+  lines:[
+    {who:"valentina", text:"Doña María Catalina, la va a acompañar también Vivian, nuestra psicóloga, pa' que se sienta más tranquila contándonos esto. Ya mismo la llamo."},
+    {who:"vivian", text:"Buenas tardes, María Catalina. Vamos a un saloncito aparte, rosado, tranquilo, solo entre nosotras tres."},
+    {who:"maria", text:"Gracias… la verdad me daba mucha pena contar esto delante de cualquiera."},
+    {who:"narrador", text:"Y ahí, con esa sola frase, ya se entendía que lo de la cuota de alimentos era apenas la puerta de entrada a algo mucho más hondo."}
+  ],
+  legal:{title:"Por qué se activa apoyo psicológico", items:["La atención integral incluye <em>valoración psicológica</em>, no solo jurídica.","Reduce la revictimización: la usuaria no repite los hechos más dolorosos ante cada persona nueva."]},
+  flow:null
+},
+{
+  id:"valoracion", kicker:"Paso 2 · Valoración inicial", title:"Lo que empieza a salir a flote",
   eyebrow:"Espacio Violeta — sala privada", art:scenePrivateRoom("var(--rose)"), accent:"var(--rose)",
   lines:[
-    {who:"maria", text:"Vivo con mi pareja hace ocho años. Últimamente se pone bravo si voy a visitar a mi familia, y ayer no me dejaba salir de la casa."},
-    {who:"valentina", text:"¿Y lo que tiene en el rostro fue de ayer?"},
-    {who:"maria", text:"Sí. Me agarró el brazo y me empujó contra la puerta."},
-    {who:"narrador", text:"No es un interrogatorio: es identificar qué necesita María Catalina y qué rutas pueden activarse, muchas veces al mismo tiempo."}
+    {who:"maria", text:"Necesito que le fijen una cuota de alimentos a mi hija Juliana, de doce años. Nos separamos hace poco y él no nos ha dado nada."},
+    {who:"vivian", text:"Claro que la orientamos en eso. Pero cuénteme, María Catalina: ¿cómo han estado usted y Juliana desde la separación?"},
+    {who:"maria", text:"Pues… la verdad es que nos separamos porque ya no aguanté más golpes."},
+    {who:"narrador", text:"Y ahí el equipo entendió que esto no era una consulta cualquiera. Porque detrás de una cuota de alimentos, casi siempre hay una historia entera esperando para ser contada."}
   ],
   legal:{title:"Preguntas guía del punto de decisión", items:["¿Existe riesgo actual?","¿Necesita atención médica urgente?","¿Hay niñas, niños o adolescentes en el hogar?","¿Ya realizó alguna denuncia?","¿Qué orientación jurídica requiere?"]},
   flow:null
 },
 {
-  id:"equipo", kicker:"Entre bastidores", title:"Valentina consulta al equipo docente",
-  eyebrow:"Sala de casos — Consultorio Jurídico", art:sceneTeam(), accent:"var(--teal)",
+  id:"giro", kicker:"El corazón del caso", title:"Trece años de matrimonio, contados despacio",
+  eyebrow:"Espacio Violeta — sala privada", art:scenePrivateRoom("var(--terracotta)"), accent:"var(--terracotta)",
   lines:[
-    {who:"valentina", text:"Profesora, tengo un caso de violencia intrafamiliar. Hay riesgo actual y posiblemente una niña en el hogar."},
-    {who:"equipo", text:"Buen trabajo evitando que lo repita dos veces. Revisemos juntos qué rutas se activan antes de volver con ella."},
-    {who:"narrador", text:"Por eso el estudiante conversa primero con el equipo docente: para que María Catalina no tenga que contar su historia una y otra vez a personas distintas."}
+    {who:"maria", text:"Yo estuve trece años casada con Jesús Rendón. Él es pastor de una iglesia por el barrio, y siempre me repetía que la Biblia manda que la mujer obedezca al marido."},
+    {who:"maria", text:"Todo lo económico lo manejaba él. Yo nunca trabajé por fuera; me dediqué a la casa, a criar a Juliana, y así se me fue pasando la juventud, sin darme cuenta."},
+    {who:"maria", text:"Y los golpes… esos empezaron hace años. Al principio era un empujón, un grito. Con el tiempo se fue poniendo peor."},
+    {who:"narrador", text:"Óigame esto bien, porque aquí es donde el cuento pega el timonazo: María Catalina no vino a contar un episodio, vino cargando una historia de años. Y apenas estábamos oyendo la primera capa."}
   ],
   legal:null, flow:null
 },
 {
-  id:"salud", kicker:"Paso 3 · ¿Necesita atención médica?", title:"La ruta de salud no espera a la denuncia",
-  eyebrow:"Ruta de salud", art:sceneRoute("var(--teal)"), accent:"var(--teal)",
+  id:"trasfondo", kicker:"Lo que nadie sabía", title:"Separados… pero el peligro no se fue",
+  eyebrow:"Espacio Violeta — sala privada", art:scenePrivateRoom("var(--gold)"), accent:"var(--gold)",
   lines:[
-    {who:"valentina", text:"María Catalina, ¿el brazo o el rostro le duelen? ¿Ha podido recibir atención médica?"},
-    {who:"maria", text:"Me duele, pero me daba miedo ir. Pensé que me iban a pedir que denunciara primero."},
-    {who:"valentina", text:"Eso no es necesario. La podemos orientar hacia la IPS más cercana; tiene derecho a la atención integral."}
+    {who:"maria", text:"Hace unos días nos separamos de verdad. Ahora vivo donde mi mamá, con Juliana. Pero él no me deja tranquila: me manda mensajes diciendo que vuelva a la casa, o que si no, él va a ir por mí."},
+    {who:"maria", text:"Una noche intentó entrar a la fuerza donde mi mamá. Gracias a Dios los vecinos hicieron bulla y él se fue. Si no, no sé qué hubiera pasado."},
+    {who:"maria", text:"Y hace ocho días me lo encontré en la galería, haciendo mercado. Ahí fue que me alcanzó a golpear, delante de toda la gente. Este morado es de eso, y todavía no me sana bien."},
+    {who:"maria", text:"Yo siento que corro peligro. Y no solo yo: también mi mamá, y Juliana."},
+    {who:"narrador", text:"Y ahí quedó plantado el nudo del caso: separación, amenazas, un intento de violación de domicilio, y una agresión en plena calle, hace apenas una semana. Pilas, futuro abogado, porque esto apenas va empezando."}
+  ],
+  legal:{title:"Por qué esto no es «solo una cuota de alimentos»", items:[
+    "Las amenazas de volver por la fuerza, sumadas al intento de ingreso a la vivienda, son <em>indicadores de riesgo grave e inminente</em>.",
+    "El <em>control económico</em> sostenido durante el matrimonio también es una forma reconocida de violencia intrafamiliar.",
+    "Un caso puede necesitar varias rutas a la vez: alimentos para Juliana, protección para toda la familia, salud y, eventualmente, denuncia penal."
+  ]}, flow:null
+},
+{
+  id:"equipo", kicker:"Entre bastidores", title:"Valentina consulta a la profesora Alessandra",
+  eyebrow:"Sala de casos — Consultorio Jurídico", art:sceneTeam(), accent:"var(--teal)",
+  lines:[
+    {who:"valentina", text:"Profesora Alessandra, el caso que traía María Catalina no era solo una cuota de alimentos. Hay amenazas, un intento de entrar a la fuerza a la casa de la mamá, y una agresión hace ocho días en la galería."},
+    {who:"equipo", text:"Buen trabajo evitando que lo repita dos veces. Vamos a mirar, paso por paso, qué rutas se activan antes de volver donde ella."},
+    {who:"narrador", text:"Y así, mientras Vivian acompañaba a María Catalina, Valentina y la profesora Alessandra empezaban a trazar el mapa jurídico del caso, sin dejarla sola ni un momento."}
+  ],
+  legal:null, flow:null
+},
+{
+  id:"salud", kicker:"Paso 3 · ¿Necesita atención médica?", title:"Ese golpe todavía no ha sanado",
+  eyebrow:"IPS — Urgencias", art:sceneHospital(), accent:"var(--teal)",
+  lines:[
+    {who:"valentina", text:"María Catalina, del golpe de hace ocho días, ¿la revisaron en algún centro médico?"},
+    {who:"maria", text:"No. Me daba miedo ir, pensé que primero me iban a exigir poner la denuncia. Y la verdad, el cachete todavía no me ha sanado bien."},
+    {who:"vivian", text:"Eso no es así. Así hayan pasado varios días, la tienen que atender ya mismo, sin pedirle nada de eso primero."}
   ],
   legal:{title:"Marco normativo", items:[
     "La violencia sexual e intrafamiliar es una <em>urgencia médica</em>, sin importar el tiempo transcurrido (Art. 23, Ley 1719 de 2014).",
@@ -643,30 +831,32 @@ const chapters = [
   ]}
 },
 {
-  id:"riesgo", kicker:"Paso 4 · ¿Existe riesgo actual?", title:"Identificar quién genera el riesgo",
-  eyebrow:"Ruta de protección inmediata", art:sceneRoute("var(--terracotta)"), accent:"var(--terracotta)",
+  id:"riesgo", kicker:"Paso 4 · ¿Existe riesgo actual?", title:"El nudo más apretado: la seguridad",
+  eyebrow:"Comisaría de Familia", art:sceneComisaria(), accent:"var(--terracotta)",
   lines:[
-    {who:"valentina", text:"Necesito preguntarle algo importante: ¿usted cree que esa persona puede volver a hacerle daño?"},
-    {who:"maria", text:"Sí… porque él todavía vive conmigo."},
-    {who:"narrador", text:"Ahí aparece una prioridad clara: la seguridad de María Catalina. La protección no tiene que esperar a que termine un proceso penal."}
+    {who:"valentina", text:"Necesito preguntarle algo importante, con toda la calma: ¿usted cree que él puede volver a hacerle daño, a usted o a su familia?"},
+    {who:"maria", text:"Sí, doctora. Después de lo de la galería y de lo que intentó donde mi mamá, yo de verdad siento que corremos peligro las tres."},
+    {who:"narrador", text:"Ahí quedó clara la prioridad número uno: la seguridad de María Catalina, de Juliana y de la abuela. Y esa, óigame bien, no tiene que esperar a que se resuelva ningún proceso penal."}
   ],
   legal:{title:"Marco normativo", items:[
     "La protección puede solicitarse <em>antes</em> de presentar la denuncia penal (Ley 1719 de 2014).",
     "Si el riesgo ocurre en el contexto familiar, aplica la <em>Comisaría de Familia</em> (Ley 2126 de 2021 y Ley 1257 de 2008).",
-    "Si el riesgo es grave o inmediato, se activa la <em>Línea 123 — Policía Nacional</em>, sin perjuicio de activar Fiscalía y Salud simultáneamente."
+    "Si el riesgo es grave o inmediato — como un intento de ingreso a la vivienda —, se activa la <em>Línea 123 — Policía Nacional</em>, sin perjuicio de activar Fiscalía y Salud simultáneamente.",
+    "La misma Comisaría de Familia es competente para fijar, de manera independiente, la <em>cuota de alimentos</em> de Juliana."
   ]},
   flow:{accent:"var(--terracotta)", branches:[
-    {label:"Contexto familiar", nodes:["Comisaría de Familia","Órdenes: alejamiento, desalojo, protección policial"]},
+    {label:"Contexto familiar", nodes:["Comisaría de Familia","Órdenes: alejamiento, desalojo, protección policial","Fijación de cuota de alimentos"]},
     {label:"Riesgo grave o inmediato", nodes:["Policía Nacional · Línea 123","Activa Fiscalía + Salud + Protección"]}
   ]}
 },
 {
-  id:"nna", kicker:"Paso 5 · ¿Hay una niña, niño o adolescente?", title:"Un segundo giro en el caso",
+  id:"hija", kicker:"Paso 5 · ¿Hay una niña, niño o adolescente?", title:"Juliana, doce años, también tiene miedo",
   eyebrow:"Ruta de restablecimiento de derechos", art:sceneRoute("var(--gold)"), accent:"var(--gold)",
   lines:[
-    {who:"maria", text:"Hay algo más… mi nieta tiene 10 años y vive conmigo. Ayer estaba en la casa cuando pasó todo. Ahora tiene miedo de quedarse sola."},
-    {who:"valentina", text:"Gracias por contármelo. Eso también nos obliga a activar una ruta específica para ella."},
-    {who:"narrador", text:"Una misma situación puede requerir la articulación de varias instituciones al mismo tiempo."}
+    {who:"maria", text:"Mi hija Juliana tiene doce años y vive conmigo donde mi mamá desde que nos separamos. La dejé allá hoy pa' venir sola hasta acá."},
+    {who:"maria", text:"Ella estaba en la casa la noche que él intentó entrar a la fuerza. Desde entonces no se quiere despegar de mí, y le da miedo hasta ir sola al colegio."},
+    {who:"vivian", text:"Gracias por contarnos eso. Juliana también necesita una ruta propia de atención, no solo usted."},
+    {who:"narrador", text:"Y así, lo que llegó como una cuota de alimentos, resultó siendo el caso de una familia entera. Una misma historia puede necesitar tocar varias puertas al mismo tiempo."}
   ],
   legal:{title:"Marco normativo", items:[
     "Cuando hay un niño, niña o adolescente involucrado existe un <em>deber reforzado</em> de protección.",
@@ -674,16 +864,16 @@ const chapters = [
     "No debe manejarse como una consulta jurídica ordinaria: el Consultorio debe promover la activación institucional inmediata."
   ]},
   flow:{accent:"var(--gold)", branches:[
-    {label:"Ruta NNA", nodes:["Espacio Violeta","Sector salud (atención urgente)","ICBF / Defensoría de Familia","Fiscalía (denuncia penal)"]}
+    {label:"Ruta para Juliana", nodes:["Espacio Violeta","Sector salud (atención urgente)","ICBF / Defensoría de Familia","Fiscalía (denuncia penal)"]}
   ]}
 },
 {
-  id:"penal", kicker:"Paso 6 · Ruta penal", title:"Explicar antes de remitir",
-  eyebrow:"Fiscalía General de la Nación", art:sceneRoute("var(--rose)"), accent:"var(--rose)",
+  id:"penal", kicker:"Paso 6 · Ruta penal", title:"Golpes, amenazas y una puerta forzada: ¿eso es delito?",
+  eyebrow:"Fiscalía General de la Nación", art:sceneFiscalia(), accent:"var(--rose)",
   lines:[
-    {who:"maria", text:"¿Y lo que me hicieron es un delito? ¿Toca ir directo a la Fiscalía?"},
-    {who:"valentina", text:"Eso se valora jurídicamente según los hechos. Le vamos a explicar el camino completo, no solo a dónde ir."},
-    {who:"narrador", text:"El papel del Consultorio no es decir «vaya a la Fiscalía». Es orientar, explicar, acompañar y evitar la revictimización."}
+    {who:"maria", text:"¿Y lo de la galería, y lo de esa noche que intentó entrar donde mi mamá, eso es delito? ¿Toca ir derechito a la Fiscalía?"},
+    {who:"valentina", text:"Eso se valora jurídicamente según los hechos: la agresión, las amenazas y el intento de ingreso a la vivienda pueden constituir varios delitos distintos. Le vamos a explicar el camino completo, no solo a dónde ir."},
+    {who:"narrador", text:"Porque el papel del Consultorio no es soltar un «vaya a la Fiscalía» y ya. Es orientar, explicar despacio, acompañar de la mano, y jamás hacerla sentir culpable de nada."}
   ],
   legal:{title:"Canales para la denuncia", items:["URI, SAU, CAIVAS, CAPIV o Policía Judicial.", "El ICBF identifica estas mismas autoridades como puntos para poner en conocimiento hechos de violencia sexual."]},
   flow:{accent:"var(--rose)", branches:[
@@ -691,23 +881,23 @@ const chapters = [
   ]}
 },
 {
-  id:"derechos", kicker:"Paso 7 · Orientación jurídica individual", title:"Los derechos que le pertenecen a María Catalina",
+  id:"derechos", kicker:"Paso 7 · Orientación jurídica individual", title:"Lo que a María Catalina le pertenece",
   eyebrow:"Derechos de la víctima", art:scenePrivateRoom("var(--gold)"), accent:"var(--gold)",
   lines:[
-    {who:"valentina", text:"María Catalina, usted tiene derecho a recibir información clara, a la intimidad y dignidad, a la atención integral y a la protección."},
-    {who:"valentina", text:"También tiene derecho a acceder a la justicia sin que la hagan sentir culpable por lo que pasó."},
-    {who:"narrador", text:"María Catalina empieza a respirar distinto. No está resolviendo todo hoy, pero ya no está sola frente al proceso."}
+    {who:"valentina", text:"María Catalina, usted tiene derecho a recibir información clara, a su intimidad y dignidad, a la atención integral y a la protección."},
+    {who:"valentina", text:"También tiene derecho a acceder a la justicia sin que nadie la haga sentir culpable de lo que le pasó — ni por el miedo, ni por la plata, ni por los años que aguantó callada."},
+    {who:"narrador", text:"Y por primera vez en toda la tarde, María Catalina respiró distinto. No estaba resolviendo su vida entera ese viernes, pero ya no estaba cargando el peso ella sola."}
   ],
   legal:{title:"Derechos de la víctima (Ley 1257 de 2008)", items:["Recibir información","Intimidad y dignidad","Atención integral","Protección","Acceder a la justicia","No ser revictimizada"]},
   flow:null
 },
 {
-  id:"seguimiento", kicker:"Paso 8 · Acompañamiento y seguimiento", title:"Ningún caso se queda a medias",
+  id:"seguimiento", kicker:"Paso 8 · Acompañamiento y seguimiento", title:"Que ningún caso se quede a medias",
   eyebrow:"Después de la remisión", art:sceneTeam(), accent:"var(--teal)",
   lines:[
-    {who:"equipo", text:"Registremos la actuación de hoy y confirmemos que la remisión a salud y a la Comisaría llegó a buen puerto."},
-    {who:"valentina", text:"Entonces no es solo remitirla y ya."},
-    {who:"equipo", text:"No. Hay que verificar qué pasó con la remisión, si se otorgaron medidas de protección, y qué necesita después."}
+    {who:"equipo", text:"Registremos la actuación de hoy, y confirmemos que la remisión a salud y a la Comisaría sí llegó a buen puerto."},
+    {who:"valentina", text:"O sea que esto no es solo remitirla y ya."},
+    {who:"equipo", text:"No, para nada. Hay que verificar qué pasó con la remisión, si le otorgaron medidas de protección, cómo va la cuota de alimentos, y qué necesitan ella y Juliana de aquí en adelante."}
   ],
   legal:null,
   flow:{accent:"var(--teal)", branches:[
@@ -718,8 +908,9 @@ const chapters = [
   id:"cierre", kicker:"Cierre del caso", title:"María Catalina sale del Consultorio, ya no sola",
   eyebrow:"Espacio Violeta · Consultorio Jurídico FUP", art:sceneClosing(), accent:"var(--rose)",
   lines:[
-    {who:"narrador", text:"María Catalina llegó pensando que solo necesitaba saber dónde denunciar. El caso le enseñó al equipo algo distinto."},
-    {who:"narrador", text:"Que en el Consultorio Jurídico no basta con saber qué dice la ley: hay que saber qué hacer, en qué momento, y cómo acompañar sin dejar a nadie solo en el camino."}
+    {who:"narrador", text:"Cae la tarde sobre Santander de Quilichao, y María Catalina sale por la misma puerta por donde entró con un pie adentro y otro afuera… pero ya no sale igual."},
+    {who:"narrador", text:"Ella llegó pensando que solo necesitaba arreglar una cuota de alimentos. Y terminó enseñándole al equipo algo mucho más grande: que detrás de un trámite sencillo, a veces, se esconde una vida entera en riesgo."},
+    {who:"narrador", text:"Porque en el Consultorio Jurídico no basta con saberse la ley de memoria. Hay que saber qué preguntar, en qué momento, y cómo caminar al lado de alguien sin soltarle la mano."}
   ],
   legal:null, flow:null, closing:true
 }
@@ -890,7 +1081,10 @@ function pickVoice(){
   if(!('speechSynthesis' in window)) return null;
   const voices = window.speechSynthesis.getVoices();
   if(!voices || !voices.length) return null;
-  let v = voices.find(v=> /es[-_](CO|419)/i.test(v.lang) || /colombia/i.test(v.name));
+  const latam = ['es-CO','es-419','es-MX','es-US','es-EC','es-PE','es-VE','es-AR','es-CL'];
+  let v = voices.find(v=> /colombia/i.test(v.name) || /es[-_]CO/i.test(v.lang));
+  if(!v) v = voices.find(v=> latam.includes((v.lang||'').replace('_','-')));
+  if(!v) v = voices.find(v=> v.lang && v.lang.toLowerCase().startsWith('es') && !/es[-_]ES/i.test(v.lang));
   if(!v) v = voices.find(v=> v.lang && v.lang.toLowerCase().startsWith('es'));
   return v || null;
 }
@@ -915,8 +1109,8 @@ function speakChapter(c){
     const u = new SpeechSynthesisUtterance(l.text);
     if(voice) u.voice = voice;
     u.lang = voice ? voice.lang : 'es-ES';
-    u.rate = 0.98;
-    u.pitch = l.who==='maria' ? 0.92 : (l.who==='valentina' ? 1.08 : 1.0);
+    u.rate = l.who==='narrador' ? 0.9 : 0.98;
+    u.pitch = l.who==='maria' ? 0.92 : (l.who==='valentina' ? 1.08 : (l.who==='vivian' ? 1.02 : 0.97));
     u.onend = next;
     u.onerror = next;
     speechSynthesis.speak(u);
