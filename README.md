@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -779,7 +780,7 @@ const chapters = [
   id:"giro", kicker:"El corazón del caso", title:"Trece años de matrimonio, contados despacio",
   eyebrow:"Espacio Violeta — sala privada", art:scenePrivateRoom("var(--terracotta)"), accent:"var(--terracotta)",
   lines:[
-    {who:"maria", text:"Yo estuve trece años casada con Jesús Rendón. Él es pastor de una iglesia por el barrio, y siempre me repetía que la Biblia manda que la mujer obedezca al marido."},
+    {who:"maria", text:"Yo estuve trece años casada con Jesús Rendón. Él es pastor de una iglesia por el barrio, y siempre me metió en la cabeza que la mujer está para obedecer al marido."},
     {who:"maria", text:"Todo lo económico lo manejaba él. Yo nunca trabajé por fuera; me dediqué a la casa, a criar a Sofía, y así se me fue pasando la juventud, sin darme cuenta."},
     {who:"maria", text:"Y los golpes… esos empezaron hace años. Al principio era un empujón, un grito. Con el tiempo se fue poniendo peor."},
     {who:"narrador", text:"Óigame esto bien, porque aquí es donde el cuento pega el timonazo: María Catalina no vino a contar un episodio, vino cargando una historia de años. Y apenas estábamos oyendo la primera capa."}
